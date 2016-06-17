@@ -161,6 +161,7 @@ void caffe_gpu_set(const int N, const Dtype alpha, Dtype* Y) {
 template void caffe_gpu_set<int>(const int N, const int alpha, int* Y);
 template void caffe_gpu_set<float>(const int N, const float alpha, float* Y);
 template void caffe_gpu_set<double>(const int N, const double alpha, double* Y);
+template void caffe_gpu_set<unsigned int>(const int N, const unsigned int alpha, unsigned int* Y);
 
 template <typename Dtype>
 __global__ void add_scalar_kernel(const int n, const Dtype alpha, Dtype* y) {

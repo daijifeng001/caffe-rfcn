@@ -1,13 +1,32 @@
-# Windows Caffe
+# Caffe branch for R-FCN
 
-**This is an experimental, Microsoft-led branch by Pavle Josipovic (@pavlejosipovic). It is a work-in-progress.**
+This is a branch of Caffe supporting [**R-FCN**](https://github.com/daijifeng001/R-FCN), which has been tested under Windows (Windows 7, 8, Server 2012 R2) and Linux (Ubuntu 14.04).
 
-This branch of Caffe ports the framework to Windows.
+## Linux Setup
 
-[![Travis Build Status](https://api.travis-ci.org/BVLC/caffe.svg?branch=windows)](https://travis-ci.org/BVLC/caffe) Travis (Linux build)
+### Pre-Build Steps
 
-[![Build status](https://ci.appveyor.com/api/projects/status/128eg95svel2a2xs?svg=true)]
-(https://ci.appveyor.com/project/pavlejosipovic/caffe-v45qi) AppVeyor (Windows build)
+Copy `Makefile.config.example` to `Makefile.config`
+
+We need to modify Makefile.config to specify some software PATHS, you may view my [Makefile.config](https://www.dropbox.com/s/kbrxkiq8ltb3z2q/Makefile.config?dl=0) for reference.
+
+### CUDA
+Download `CUDA Toolkit 7.5` [from nVidia website](https://developer.nvidia.com/cuda-toolkit).
+
+### Matlab
+Uncomment ```MATLAB_DIR``` and set ```MATLAB_DIR``` accordingly to build Caffe Matlab wrapper. Matlab 2014a and later versions are supported.
+
+### cuDNN (optional)
+For cuDNN acceleration using NVIDIA’s proprietary cuDNN software, uncomment the ```USE_CUDNN := 1``` switch in Makefile.config. cuDNN is sometimes but not always faster than Caffe’s GPU acceleration.
+
+Download `cuDNN v3` or `cuDNN v4` [from nVidia website](https://developer.nvidia.com/cudnn). And unpack downloaded zip to $CUDA_PATH (It typically would be /usr/local/cuda/include and /usr/local/cuda/lib64).
+
+### Build
+
+Simply type
+```
+make -j8 && make matcaffe
+```
 
 ## Windows Setup
 **Requirements**: Visual Studio 2013
@@ -15,51 +34,28 @@ This branch of Caffe ports the framework to Windows.
 ### Pre-Build Steps
 Copy `.\windows\CommonSettings.props.example` to `.\windows\CommonSettings.props`
 
-By defaults Windows build requires `CUDA` and `cuDNN` libraries.
-Both can be disabled by adjusting build variables in `.\windows\CommonSettings.props`.
-Python support is disabled by default, but can be enabled via `.\windows\CommonSettings.props` as well.
 3rd party dependencies required by Caffe are automatically resolved via NuGet.
 
 ### CUDA
 Download `CUDA Toolkit 7.5` [from nVidia website](https://developer.nvidia.com/cuda-toolkit).
-If you don't have CUDA installed, you can experiment with CPU_ONLY build.
-In `.\windows\CommonSettings.props` set `CpuOnlyBuild` to `true` and set `UseCuDNN` to `false`.
 
-### cuDNN
+### Matlab
+Set `MatlabSupport` to `true` and `MatlabDir` to the root of your Matlab installation in `.\windows\CommonSettings.props` to build Caffe Matlab wrapper. Matlab 2014a and later versions are supported.
+
+### cuDNN (optional)
 Download `cuDNN v3` or `cuDNN v4` [from nVidia website](https://developer.nvidia.com/cudnn).
 Unpack downloaded zip to %CUDA_PATH% (environment variable set by CUDA installer).
 Alternatively, you can unpack zip to any location and set `CuDnnPath` to point to this location in `.\windows\CommonSettings.props`.
 `CuDnnPath` defined in `.\windows\CommonSettings.props`.
-Also, you can disable cuDNN by setting `UseCuDNN` to `false` in the property file.
-
-### Python
-To build Caffe Python wrapper set `PythonSupport` to `true` in `.\windows\CommonSettings.props`.
-Download Miniconda 2.7 64-bit Windows installer [from Miniconda website] (http://conda.pydata.org/miniconda.html).
-Install for all users and add Python to PATH (through installer).
-
-Run the following commands from elevated command prompt:
-
-```
-conda install --yes numpy scipy matplotlib scikit-image pip
-pip install protobuf
-```
-
-#### Remark
-After you have built solution with Python support, in order to use it you have to either:  
-* set `PythonPath` environment variable to point to `<caffe_root>\Build\x64\Release\pycaffe`, or
-* copy folder `<caffe_root>\Build\x64\Release\pycaffe\caffe` under `<python_root>\lib\site-packages`.
-
-### Matlab
-To build Caffe Matlab wrapper set `MatlabSupport` to `true` and `MatlabDir` to the root of your Matlab installation in `.\windows\CommonSettings.props`.
-
-#### Remark
-After you have built solution with Matlab support, in order to use it you have to:
-* add the generated `matcaffe` folder to Matlab search path, and
-* add `<caffe_root>\Build\x64\Release` to your system path.
+By default, cuDNN is not enabled. You can enable cuDNN by setting `UseCuDNN` to `true` in the property file.
 
 ### Build
 Now, you should be able to build `.\windows\Caffe.sln`
 
+#### Remark
+After you have built solution with Matlab support, copy all files in .\Build\x64\Release to R-FCN\external\caffe\matlab\caffe_rfcn.
+
 ## Further Details
 
 Refer to the BVLC/caffe master branch README for all other details such as license, citation, and so on.
+
