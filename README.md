@@ -8,7 +8,7 @@ This is a branch of Caffe supporting [**R-FCN**](https://github.com/daijifeng001
 
 Copy `Makefile.config.example` to `Makefile.config`
 
-We need to modify Makefile.config to specify some software PATHS, you may view my [Makefile.config](https://www.dropbox.com/s/kbrxkiq8ltb3z2q/Makefile.config?dl=0) for reference.
+We need to modify Makefile.config to specify some software PATHS, you may view my [Makefile.config](https://1drv.ms/u/s!Am-5JzdW2XHzhc43M2A9CwV-4O6c8w) for reference.
 
 ### CUDA
 Download `CUDA Toolkit 7.5` [from nVidia website](https://developer.nvidia.com/cuda-toolkit).

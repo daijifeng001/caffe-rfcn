@@ -21,20 +21,20 @@ void SmoothL1LossLayer<Dtype>::LayerSetUp(
   const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   has_weights_ = (bottom.size() == 3);
 
-	if (!this->layer_param_.loss_param().has_normalization() &&
-		this->layer_param_.loss_param().has_normalize()) {
-		normalization_ = this->layer_param_.loss_param().normalize() ?
-		LossParameter_NormalizationMode_VALID :
-		LossParameter_NormalizationMode_BATCH_SIZE;
-	}
-	else {
-		normalization_ = this->layer_param_.loss_param().normalization();
-	}
+  if (!this->layer_param_.loss_param().has_normalization() &&
+    this->layer_param_.loss_param().has_normalize()) {
+    normalization_ = this->layer_param_.loss_param().normalize() ?
+    LossParameter_NormalizationMode_VALID :
+    LossParameter_NormalizationMode_BATCH_SIZE;
+  }
+  else {
+    normalization_ = this->layer_param_.loss_param().normalization();
+  }
 }
 
 template <typename Dtype>
 void SmoothL1LossLayer<Dtype>::Reshape(
-	const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
+  const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
   LossLayer<Dtype>::Reshape(bottom, top);
   CHECK_EQ(bottom[0]->channels(), bottom[1]->channels());
   CHECK_EQ(bottom[0]->height(), bottom[1]->height());
@@ -53,39 +53,39 @@ void SmoothL1LossLayer<Dtype>::Reshape(
   errors_.Reshape(bottom[0]->num(), bottom[0]->channels(),
       bottom[0]->height(), bottom[0]->width());
 
-	// top[2] stores per-instance loss, which takes the shape of N*1*H*W
+  // top[2] stores per-instance loss, which takes the shape of N*1*H*W
   if (top.size()>=2) {
-	  top[1]->Reshape(bottom[0]->num(), 1, bottom[0]->height(), bottom[0]->width());
+    top[1]->Reshape(bottom[0]->num(), 1, bottom[0]->height(), bottom[0]->width());
   }
 }
 
 template <typename Dtype>
 Dtype SmoothL1LossLayer<Dtype>::get_normalizer(
-	LossParameter_NormalizationMode normalization_mode, Dtype pre_fixed_normalizer) {
-	Dtype normalizer;
-	switch (normalization_mode) {
-	case LossParameter_NormalizationMode_FULL:
-		normalizer = Dtype(outer_num_ * inner_num_);
-		break;
-	case LossParameter_NormalizationMode_VALID:
+  LossParameter_NormalizationMode normalization_mode, Dtype pre_fixed_normalizer) {
+  Dtype normalizer;
+  switch (normalization_mode) {
+  case LossParameter_NormalizationMode_FULL:
     normalizer = Dtype(outer_num_ * inner_num_);
-		break;
-	case LossParameter_NormalizationMode_BATCH_SIZE:
-		normalizer = Dtype(outer_num_);
-		break;
-	case LossParameter_NormalizationMode_PRE_FIXED:
-		normalizer = pre_fixed_normalizer;
-		break;
-	case LossParameter_NormalizationMode_NONE:
-		normalizer = Dtype(1);
-		break;
-	default:
-		LOG(FATAL) << "Unknown normalization mode: "
-			<< LossParameter_NormalizationMode_Name(normalization_mode);
-	}
-	// Some users will have no labels for some examples in order to 'turn off' a
-	// particular loss in a multi-task setup. The max prevents NaNs in that case.
-	return std::max(Dtype(1.0), normalizer);
+    break;
+  case LossParameter_NormalizationMode_VALID:
+    normalizer = Dtype(outer_num_ * inner_num_);
+    break;
+  case LossParameter_NormalizationMode_BATCH_SIZE:
+    normalizer = Dtype(outer_num_);
+    break;
+  case LossParameter_NormalizationMode_PRE_FIXED:
+    normalizer = pre_fixed_normalizer;
+    break;
+  case LossParameter_NormalizationMode_NONE:
+    normalizer = Dtype(1);
+    break;
+  default:
+    LOG(FATAL) << "Unknown normalization mode: "
+      << LossParameter_NormalizationMode_Name(normalization_mode);
+  }
+  // Some users will have no labels for some examples in order to 'turn off' a
+  // particular loss in a multi-task setup. The max prevents NaNs in that case.
+  return std::max(Dtype(1.0), normalizer);
 }
 
 template <typename Dtype>

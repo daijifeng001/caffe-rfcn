@@ -56,9 +56,9 @@ namespace caffe {
     CHECK_EQ(bottom[3]->height(), height_);
     CHECK_EQ(bottom[3]->width(), width_);
 
-		// Labels for scoring
+    // Labels for scoring
     top[0]->Reshape(num_, 1, height_, width_);
-		// Loss weights for bbox regression
+    // Loss weights for bbox regression
     top[1]->Reshape(num_, bbox_channels_, height_, width_);
   }
 
